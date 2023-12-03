@@ -8,6 +8,7 @@ import Ice
 
 from .directory import Directory
 
+Ice.loadSlice
 
 class DirectoryApp(Ice.Application):
     """Implementation of the Ice.Application for the Authentication service."""
