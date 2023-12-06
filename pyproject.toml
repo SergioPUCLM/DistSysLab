@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "icedrive-directory"
 version = "0.0.1"
 authors = [
-  { name="Put Your name Here", email="youremailaddress@uclm.es" },
+  { name="Sergio Pozuelo Martín-Consuegra", email="sergio.pozuelo4@alu.uclm.es" },
 ]
 description = "Implementation of IceDrive Directory service"
 readme = "README.md"
@@ -19,6 +19,8 @@ classifiers = [
 license = "GPL-3.0-only"
 dependencies = [
     "zeroc-ice>=3.7",
+    "Ice>=0.0.2",
+    "IcePy>=0.0.7"
 ]
 
 [project.optional-dependencies]
@@ -26,7 +28,7 @@ tests = ["pytest"]
 linters = ["black", "ruff", "pydocstyle"]
 
 [project.urls]
-"Homepage" = "https://github.com/YOURUSERNAME/YOURREPOSITORY"
+"Homepage" = "https://github.com/SergioPUCLM/DistSysLab"
 
 [project.scripts]
 icedrive-directory = "icedrive_directory.app:main"
