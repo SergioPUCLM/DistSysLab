@@ -31,4 +31,5 @@ linters = ["black", "ruff", "pydocstyle"]
 "Homepage" = "https://github.com/SergioPUCLM/DistSysLab"
 
 [project.scripts]
-icedrive-directory = "icedrive_directory.app:main"
+icedrive-directory = "icedrive_directory.command_line_handlers:server"
+icedrive-client = "icedrive_directory.command_line_handlers:client"
