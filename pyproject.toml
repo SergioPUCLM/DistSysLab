@@ -20,7 +20,7 @@ license = "GPL-3.0-only"
 dependencies = [
     "zeroc-ice>=3.7",
     "Ice>=0.0.2",
-    "IcePy>=0.0.7"
+    "IcePy>=0.0.7",
 ]
 
 [project.optional-dependencies]

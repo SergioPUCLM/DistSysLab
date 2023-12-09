@@ -1,4 +1,4 @@
-from directory_manager import Directory, DirectoryService
+from directory_manager import DirectoryI, DirectoryServiceI
 
 def print_directory_structure(directory, indent=0):
     print("  " * indent + f"{directory.name}/")
@@ -9,7 +9,7 @@ def print_directory_structure(directory, indent=0):
 
 def main():
     user = "test_user"
-    service = DirectoryService()
+    service = DirectoryServiceI()
 
     # Get root directory for the user
     root_directory = service.getRoot(user)

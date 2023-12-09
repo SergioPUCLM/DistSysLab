@@ -4,7 +4,7 @@ from typing import List
 import uuid as UD
 import hashlib
 
-class Directory:
+class DirectoryI:
     def __init__(self, name, parent=None):  # Create a directory
         self.name = name
         self.parent = parent
@@ -25,7 +25,7 @@ class Directory:
 
     def createChild(self, name):  # Create a child
         if name not in self.childs:  # Check if it already exists
-            child = Directory(name, parent=self)  # Create the child
+            child = DirectoryI(name, parent=self)  # Create the child
             self.childs[name] = child  # Add the child to the dictionary
             return child
         else:  # If it already exists throw an exception
@@ -64,7 +64,7 @@ class Directory:
         else:
             return ""
 
-class DirectoryService:
+class DirectoryServiceI:
     def __init__(self, dataDir="./USRDIRS/"):
         self.dataDir = dataDir
         os.makedirs(self.dataDir, exist_ok=True)
@@ -96,7 +96,7 @@ class DirectoryService:
         return str(uuid)
 
     def loadDirectory(self, data):  # Create a directory object from the json file
-        directory = Directory(name=data["name"])  # Create the directory
+        directory = DirectoryI(name=data["name"])  # Create the directory
         for childName, childData in data.get("childs", {}).items():  # Add the childs
             child = self.loadDirectory(childData)
             directory.childs[childName] = child
@@ -113,18 +113,22 @@ class DirectoryService:
             data["files"] = directory.files
         return data
 
-# exceptions:
+
+# Exceptions:
 class ChildAlreadyExists(Exception):
     def __init__(self, childName, path):
         super().__init__(f"Child directory \"{childName}\" already exists in path: {path}")
+
 
 class ChildNotExists(Exception):
     def __init__(self, childName, path):
         super().__init__(f"Child directory \"{childName}\" does not exist in path: {path}")
 
+
 class FileAlreadyExists(Exception):
     def __init__(self, filename):
         super().__init__(f"File \"{filename}\" already exists in the directory")
+
 
 class FileNotFound(Exception):
     def __init__(self, filename):

@@ -8,8 +8,6 @@ import Ice
 
 from .directory import Directory
 
-Ice.loadSlice
-
 class DirectoryApp(Ice.Application):
     """Implementation of the Ice.Application for the Authentication service."""
 
@@ -27,9 +25,3 @@ class DirectoryApp(Ice.Application):
         self.communicator().waitForShutdown()
 
         return 0
-
-
-def main():
-    """Handle the icedrive-authentication program."""
-    app = DirectoryApp()
-    return app.main(sys.argv)
