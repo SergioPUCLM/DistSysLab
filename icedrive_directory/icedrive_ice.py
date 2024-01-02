@@ -225,6 +225,25 @@ if 'FailedToReadData' not in _M_IceDrive.__dict__:
     _M_IceDrive.FailedToReadData = FailedToReadData
     del FailedToReadData
 
+if 'TemporaryUnavailable' not in _M_IceDrive.__dict__:
+    _M_IceDrive.TemporaryUnavailable = Ice.createTempClass()
+    class TemporaryUnavailable(Ice.UserException):
+        def __init__(self, serviceName=''):
+            self.serviceName = serviceName
+
+        def __str__(self):
+            return IcePy.stringifyException(self)
+
+        __repr__ = __str__
+
+        _ice_id = '::IceDrive::TemporaryUnavailable'
+
+    _M_IceDrive._t_TemporaryUnavailable = IcePy.defineException('::IceDrive::TemporaryUnavailable', TemporaryUnavailable, (), False, None, (('serviceName', (), IcePy._t_string, False, 0),))
+    TemporaryUnavailable._ice_type = _M_IceDrive._t_TemporaryUnavailable
+
+    _M_IceDrive.TemporaryUnavailable = TemporaryUnavailable
+    del TemporaryUnavailable
+
 _M_IceDrive._t_User = IcePy.defineValue('::IceDrive::User', Ice.Value, -1, (), False, True, None, ())
 
 if 'UserPrx' not in _M_IceDrive.__dict__:
@@ -431,6 +450,228 @@ if 'AuthenticationPrx' not in _M_IceDrive.__dict__:
     _M_IceDrive.Authentication = Authentication
     del Authentication
 
+_M_IceDrive._t_AuthenticationQueryResponse = IcePy.defineValue('::IceDrive::AuthenticationQueryResponse', Ice.Value, -1, (), False, True, None, ())
+
+if 'AuthenticationQueryResponsePrx' not in _M_IceDrive.__dict__:
+    _M_IceDrive.AuthenticationQueryResponsePrx = Ice.createTempClass()
+    class AuthenticationQueryResponsePrx(Ice.ObjectPrx):
+
+        def loginResponse(self, user, context=None):
+            return _M_IceDrive.AuthenticationQueryResponse._op_loginResponse.invoke(self, ((user, ), context))
+
+        def loginResponseAsync(self, user, context=None):
+            return _M_IceDrive.AuthenticationQueryResponse._op_loginResponse.invokeAsync(self, ((user, ), context))
+
+        def begin_loginResponse(self, user, _response=None, _ex=None, _sent=None, context=None):
+            return _M_IceDrive.AuthenticationQueryResponse._op_loginResponse.begin(self, ((user, ), _response, _ex, _sent, context))
+
+        def end_loginResponse(self, _r):
+            return _M_IceDrive.AuthenticationQueryResponse._op_loginResponse.end(self, _r)
+
+        def userExists(self, context=None):
+            return _M_IceDrive.AuthenticationQueryResponse._op_userExists.invoke(self, ((), context))
+
+        def userExistsAsync(self, context=None):
+            return _M_IceDrive.AuthenticationQueryResponse._op_userExists.invokeAsync(self, ((), context))
+
+        def begin_userExists(self, _response=None, _ex=None, _sent=None, context=None):
+            return _M_IceDrive.AuthenticationQueryResponse._op_userExists.begin(self, ((), _response, _ex, _sent, context))
+
+        def end_userExists(self, _r):
+            return _M_IceDrive.AuthenticationQueryResponse._op_userExists.end(self, _r)
+
+        def userRemoved(self, context=None):
+            return _M_IceDrive.AuthenticationQueryResponse._op_userRemoved.invoke(self, ((), context))
+
+        def userRemovedAsync(self, context=None):
+            return _M_IceDrive.AuthenticationQueryResponse._op_userRemoved.invokeAsync(self, ((), context))
+
+        def begin_userRemoved(self, _response=None, _ex=None, _sent=None, context=None):
+            return _M_IceDrive.AuthenticationQueryResponse._op_userRemoved.begin(self, ((), _response, _ex, _sent, context))
+
+        def end_userRemoved(self, _r):
+            return _M_IceDrive.AuthenticationQueryResponse._op_userRemoved.end(self, _r)
+
+        def verifyUserResponse(self, result, context=None):
+            return _M_IceDrive.AuthenticationQueryResponse._op_verifyUserResponse.invoke(self, ((result, ), context))
+
+        def verifyUserResponseAsync(self, result, context=None):
+            return _M_IceDrive.AuthenticationQueryResponse._op_verifyUserResponse.invokeAsync(self, ((result, ), context))
+
+        def begin_verifyUserResponse(self, result, _response=None, _ex=None, _sent=None, context=None):
+            return _M_IceDrive.AuthenticationQueryResponse._op_verifyUserResponse.begin(self, ((result, ), _response, _ex, _sent, context))
+
+        def end_verifyUserResponse(self, _r):
+            return _M_IceDrive.AuthenticationQueryResponse._op_verifyUserResponse.end(self, _r)
+
+        @staticmethod
+        def checkedCast(proxy, facetOrContext=None, context=None):
+            return _M_IceDrive.AuthenticationQueryResponsePrx.ice_checkedCast(proxy, '::IceDrive::AuthenticationQueryResponse', facetOrContext, context)
+
+        @staticmethod
+        def uncheckedCast(proxy, facet=None):
+            return _M_IceDrive.AuthenticationQueryResponsePrx.ice_uncheckedCast(proxy, facet)
+
+        @staticmethod
+        def ice_staticId():
+            return '::IceDrive::AuthenticationQueryResponse'
+    _M_IceDrive._t_AuthenticationQueryResponsePrx = IcePy.defineProxy('::IceDrive::AuthenticationQueryResponse', AuthenticationQueryResponsePrx)
+
+    _M_IceDrive.AuthenticationQueryResponsePrx = AuthenticationQueryResponsePrx
+    del AuthenticationQueryResponsePrx
+
+    _M_IceDrive.AuthenticationQueryResponse = Ice.createTempClass()
+    class AuthenticationQueryResponse(Ice.Object):
+
+        def ice_ids(self, current=None):
+            return ('::Ice::Object', '::IceDrive::AuthenticationQueryResponse')
+
+        def ice_id(self, current=None):
+            return '::IceDrive::AuthenticationQueryResponse'
+
+        @staticmethod
+        def ice_staticId():
+            return '::IceDrive::AuthenticationQueryResponse'
+
+        def loginResponse(self, user, current=None):
+            raise NotImplementedError("servant method 'loginResponse' not implemented")
+
+        def userExists(self, current=None):
+            raise NotImplementedError("servant method 'userExists' not implemented")
+
+        def userRemoved(self, current=None):
+            raise NotImplementedError("servant method 'userRemoved' not implemented")
+
+        def verifyUserResponse(self, result, current=None):
+            raise NotImplementedError("servant method 'verifyUserResponse' not implemented")
+
+        def __str__(self):
+            return IcePy.stringify(self, _M_IceDrive._t_AuthenticationQueryResponseDisp)
+
+        __repr__ = __str__
+
+    _M_IceDrive._t_AuthenticationQueryResponseDisp = IcePy.defineClass('::IceDrive::AuthenticationQueryResponse', AuthenticationQueryResponse, (), None, ())
+    AuthenticationQueryResponse._ice_type = _M_IceDrive._t_AuthenticationQueryResponseDisp
+
+    AuthenticationQueryResponse._op_loginResponse = IcePy.Operation('loginResponse', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), _M_IceDrive._t_UserPrx, False, 0),), (), None, ())
+    AuthenticationQueryResponse._op_userExists = IcePy.Operation('userExists', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), None, ())
+    AuthenticationQueryResponse._op_userRemoved = IcePy.Operation('userRemoved', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), None, ())
+    AuthenticationQueryResponse._op_verifyUserResponse = IcePy.Operation('verifyUserResponse', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_bool, False, 0),), (), None, ())
+
+    _M_IceDrive.AuthenticationQueryResponse = AuthenticationQueryResponse
+    del AuthenticationQueryResponse
+
+_M_IceDrive._t_AuthenticationQuery = IcePy.defineValue('::IceDrive::AuthenticationQuery', Ice.Value, -1, (), False, True, None, ())
+
+if 'AuthenticationQueryPrx' not in _M_IceDrive.__dict__:
+    _M_IceDrive.AuthenticationQueryPrx = Ice.createTempClass()
+    class AuthenticationQueryPrx(Ice.ObjectPrx):
+
+        def login(self, username, password, response, context=None):
+            return _M_IceDrive.AuthenticationQuery._op_login.invoke(self, ((username, password, response), context))
+
+        def loginAsync(self, username, password, response, context=None):
+            return _M_IceDrive.AuthenticationQuery._op_login.invokeAsync(self, ((username, password, response), context))
+
+        def begin_login(self, username, password, response, _response=None, _ex=None, _sent=None, context=None):
+            return _M_IceDrive.AuthenticationQuery._op_login.begin(self, ((username, password, response), _response, _ex, _sent, context))
+
+        def end_login(self, _r):
+            return _M_IceDrive.AuthenticationQuery._op_login.end(self, _r)
+
+        def doesUserExist(self, username, response, context=None):
+            return _M_IceDrive.AuthenticationQuery._op_doesUserExist.invoke(self, ((username, response), context))
+
+        def doesUserExistAsync(self, username, response, context=None):
+            return _M_IceDrive.AuthenticationQuery._op_doesUserExist.invokeAsync(self, ((username, response), context))
+
+        def begin_doesUserExist(self, username, response, _response=None, _ex=None, _sent=None, context=None):
+            return _M_IceDrive.AuthenticationQuery._op_doesUserExist.begin(self, ((username, response), _response, _ex, _sent, context))
+
+        def end_doesUserExist(self, _r):
+            return _M_IceDrive.AuthenticationQuery._op_doesUserExist.end(self, _r)
+
+        def removeUser(self, username, password, response, context=None):
+            return _M_IceDrive.AuthenticationQuery._op_removeUser.invoke(self, ((username, password, response), context))
+
+        def removeUserAsync(self, username, password, response, context=None):
+            return _M_IceDrive.AuthenticationQuery._op_removeUser.invokeAsync(self, ((username, password, response), context))
+
+        def begin_removeUser(self, username, password, response, _response=None, _ex=None, _sent=None, context=None):
+            return _M_IceDrive.AuthenticationQuery._op_removeUser.begin(self, ((username, password, response), _response, _ex, _sent, context))
+
+        def end_removeUser(self, _r):
+            return _M_IceDrive.AuthenticationQuery._op_removeUser.end(self, _r)
+
+        def verifyUser(self, user, response, context=None):
+            return _M_IceDrive.AuthenticationQuery._op_verifyUser.invoke(self, ((user, response), context))
+
+        def verifyUserAsync(self, user, response, context=None):
+            return _M_IceDrive.AuthenticationQuery._op_verifyUser.invokeAsync(self, ((user, response), context))
+
+        def begin_verifyUser(self, user, response, _response=None, _ex=None, _sent=None, context=None):
+            return _M_IceDrive.AuthenticationQuery._op_verifyUser.begin(self, ((user, response), _response, _ex, _sent, context))
+
+        def end_verifyUser(self, _r):
+            return _M_IceDrive.AuthenticationQuery._op_verifyUser.end(self, _r)
+
+        @staticmethod
+        def checkedCast(proxy, facetOrContext=None, context=None):
+            return _M_IceDrive.AuthenticationQueryPrx.ice_checkedCast(proxy, '::IceDrive::AuthenticationQuery', facetOrContext, context)
+
+        @staticmethod
+        def uncheckedCast(proxy, facet=None):
+            return _M_IceDrive.AuthenticationQueryPrx.ice_uncheckedCast(proxy, facet)
+
+        @staticmethod
+        def ice_staticId():
+            return '::IceDrive::AuthenticationQuery'
+    _M_IceDrive._t_AuthenticationQueryPrx = IcePy.defineProxy('::IceDrive::AuthenticationQuery', AuthenticationQueryPrx)
+
+    _M_IceDrive.AuthenticationQueryPrx = AuthenticationQueryPrx
+    del AuthenticationQueryPrx
+
+    _M_IceDrive.AuthenticationQuery = Ice.createTempClass()
+    class AuthenticationQuery(Ice.Object):
+
+        def ice_ids(self, current=None):
+            return ('::Ice::Object', '::IceDrive::AuthenticationQuery')
+
+        def ice_id(self, current=None):
+            return '::IceDrive::AuthenticationQuery'
+
+        @staticmethod
+        def ice_staticId():
+            return '::IceDrive::AuthenticationQuery'
+
+        def login(self, username, password, response, current=None):
+            raise NotImplementedError("servant method 'login' not implemented")
+
+        def doesUserExist(self, username, response, current=None):
+            raise NotImplementedError("servant method 'doesUserExist' not implemented")
+
+        def removeUser(self, username, password, response, current=None):
+            raise NotImplementedError("servant method 'removeUser' not implemented")
+
+        def verifyUser(self, user, response, current=None):
+            raise NotImplementedError("servant method 'verifyUser' not implemented")
+
+        def __str__(self):
+            return IcePy.stringify(self, _M_IceDrive._t_AuthenticationQueryDisp)
+
+        __repr__ = __str__
+
+    _M_IceDrive._t_AuthenticationQueryDisp = IcePy.defineClass('::IceDrive::AuthenticationQuery', AuthenticationQuery, (), None, ())
+    AuthenticationQuery._ice_type = _M_IceDrive._t_AuthenticationQueryDisp
+
+    AuthenticationQuery._op_login = IcePy.Operation('login', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_string, False, 0), ((), IcePy._t_string, False, 0), ((), _M_IceDrive._t_AuthenticationQueryResponsePrx, False, 0)), (), None, ())
+    AuthenticationQuery._op_doesUserExist = IcePy.Operation('doesUserExist', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_string, False, 0), ((), _M_IceDrive._t_AuthenticationQueryResponsePrx, False, 0)), (), None, ())
+    AuthenticationQuery._op_removeUser = IcePy.Operation('removeUser', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_string, False, 0), ((), IcePy._t_string, False, 0), ((), _M_IceDrive._t_AuthenticationQueryResponsePrx, False, 0)), (), None, ())
+    AuthenticationQuery._op_verifyUser = IcePy.Operation('verifyUser', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), _M_IceDrive._t_UserPrx, False, 0), ((), _M_IceDrive._t_AuthenticationQueryResponsePrx, False, 0)), (), None, ())
+
+    _M_IceDrive.AuthenticationQuery = AuthenticationQuery
+    del AuthenticationQuery
+
 _M_IceDrive._t_DataTransfer = IcePy.defineValue('::IceDrive::DataTransfer', Ice.Value, -1, (), False, True, None, ())
 
 if 'DataTransferPrx' not in _M_IceDrive.__dict__:
@@ -540,26 +781,26 @@ if 'BlobServicePrx' not in _M_IceDrive.__dict__:
         def end_unlink(self, _r):
             return _M_IceDrive.BlobService._op_unlink.end(self, _r)
 
-        def upload(self, blob, context=None):
-            return _M_IceDrive.BlobService._op_upload.invoke(self, ((blob, ), context))
+        def upload(self, user, blob, context=None):
+            return _M_IceDrive.BlobService._op_upload.invoke(self, ((user, blob), context))
 
-        def uploadAsync(self, blob, context=None):
-            return _M_IceDrive.BlobService._op_upload.invokeAsync(self, ((blob, ), context))
+        def uploadAsync(self, user, blob, context=None):
+            return _M_IceDrive.BlobService._op_upload.invokeAsync(self, ((user, blob), context))
 
-        def begin_upload(self, blob, _response=None, _ex=None, _sent=None, context=None):
-            return _M_IceDrive.BlobService._op_upload.begin(self, ((blob, ), _response, _ex, _sent, context))
+        def begin_upload(self, user, blob, _response=None, _ex=None, _sent=None, context=None):
+            return _M_IceDrive.BlobService._op_upload.begin(self, ((user, blob), _response, _ex, _sent, context))
 
         def end_upload(self, _r):
             return _M_IceDrive.BlobService._op_upload.end(self, _r)
 
-        def download(self, blobId, context=None):
-            return _M_IceDrive.BlobService._op_download.invoke(self, ((blobId, ), context))
+        def download(self, user, blobId, context=None):
+            return _M_IceDrive.BlobService._op_download.invoke(self, ((user, blobId), context))
 
-        def downloadAsync(self, blobId, context=None):
-            return _M_IceDrive.BlobService._op_download.invokeAsync(self, ((blobId, ), context))
+        def downloadAsync(self, user, blobId, context=None):
+            return _M_IceDrive.BlobService._op_download.invokeAsync(self, ((user, blobId), context))
 
-        def begin_download(self, blobId, _response=None, _ex=None, _sent=None, context=None):
-            return _M_IceDrive.BlobService._op_download.begin(self, ((blobId, ), _response, _ex, _sent, context))
+        def begin_download(self, user, blobId, _response=None, _ex=None, _sent=None, context=None):
+            return _M_IceDrive.BlobService._op_download.begin(self, ((user, blobId), _response, _ex, _sent, context))
 
         def end_download(self, _r):
             return _M_IceDrive.BlobService._op_download.end(self, _r)
@@ -599,10 +840,10 @@ if 'BlobServicePrx' not in _M_IceDrive.__dict__:
         def unlink(self, blobId, current=None):
             raise NotImplementedError("servant method 'unlink' not implemented")
 
-        def upload(self, blob, current=None):
+        def upload(self, user, blob, current=None):
             raise NotImplementedError("servant method 'upload' not implemented")
 
-        def download(self, blobId, current=None):
+        def download(self, user, blobId, current=None):
             raise NotImplementedError("servant method 'download' not implemented")
 
         def __str__(self):
@@ -615,17 +856,251 @@ if 'BlobServicePrx' not in _M_IceDrive.__dict__:
 
     BlobService._op_link = IcePy.Operation('link', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_string, False, 0),), (), None, (_M_IceDrive._t_UnknownBlob,))
     BlobService._op_unlink = IcePy.Operation('unlink', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_string, False, 0),), (), None, (_M_IceDrive._t_UnknownBlob,))
-    BlobService._op_upload = IcePy.Operation('upload', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), _M_IceDrive._t_DataTransferPrx, False, 0),), (), ((), IcePy._t_string, False, 0), (_M_IceDrive._t_FailedToReadData,))
-    BlobService._op_download = IcePy.Operation('download', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_string, False, 0),), (), ((), _M_IceDrive._t_DataTransferPrx, False, 0), (_M_IceDrive._t_UnknownBlob,))
+    BlobService._op_upload = IcePy.Operation('upload', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), _M_IceDrive._t_UserPrx, False, 0), ((), _M_IceDrive._t_DataTransferPrx, False, 0)), (), ((), IcePy._t_string, False, 0), (_M_IceDrive._t_FailedToReadData, _M_IceDrive._t_TemporaryUnavailable))
+    BlobService._op_download = IcePy.Operation('download', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), _M_IceDrive._t_UserPrx, False, 0), ((), IcePy._t_string, False, 0)), (), ((), _M_IceDrive._t_DataTransferPrx, False, 0), (_M_IceDrive._t_UnknownBlob, _M_IceDrive._t_TemporaryUnavailable))
 
     _M_IceDrive.BlobService = BlobService
     del BlobService
+
+_M_IceDrive._t_BlobQueryResponse = IcePy.defineValue('::IceDrive::BlobQueryResponse', Ice.Value, -1, (), False, True, None, ())
+
+if 'BlobQueryResponsePrx' not in _M_IceDrive.__dict__:
+    _M_IceDrive.BlobQueryResponsePrx = Ice.createTempClass()
+    class BlobQueryResponsePrx(Ice.ObjectPrx):
+
+        def downloadBlob(self, blob, context=None):
+            return _M_IceDrive.BlobQueryResponse._op_downloadBlob.invoke(self, ((blob, ), context))
+
+        def downloadBlobAsync(self, blob, context=None):
+            return _M_IceDrive.BlobQueryResponse._op_downloadBlob.invokeAsync(self, ((blob, ), context))
+
+        def begin_downloadBlob(self, blob, _response=None, _ex=None, _sent=None, context=None):
+            return _M_IceDrive.BlobQueryResponse._op_downloadBlob.begin(self, ((blob, ), _response, _ex, _sent, context))
+
+        def end_downloadBlob(self, _r):
+            return _M_IceDrive.BlobQueryResponse._op_downloadBlob.end(self, _r)
+
+        def blobExists(self, context=None):
+            return _M_IceDrive.BlobQueryResponse._op_blobExists.invoke(self, ((), context))
+
+        def blobExistsAsync(self, context=None):
+            return _M_IceDrive.BlobQueryResponse._op_blobExists.invokeAsync(self, ((), context))
+
+        def begin_blobExists(self, _response=None, _ex=None, _sent=None, context=None):
+            return _M_IceDrive.BlobQueryResponse._op_blobExists.begin(self, ((), _response, _ex, _sent, context))
+
+        def end_blobExists(self, _r):
+            return _M_IceDrive.BlobQueryResponse._op_blobExists.end(self, _r)
+
+        def blobLinked(self, context=None):
+            return _M_IceDrive.BlobQueryResponse._op_blobLinked.invoke(self, ((), context))
+
+        def blobLinkedAsync(self, context=None):
+            return _M_IceDrive.BlobQueryResponse._op_blobLinked.invokeAsync(self, ((), context))
+
+        def begin_blobLinked(self, _response=None, _ex=None, _sent=None, context=None):
+            return _M_IceDrive.BlobQueryResponse._op_blobLinked.begin(self, ((), _response, _ex, _sent, context))
+
+        def end_blobLinked(self, _r):
+            return _M_IceDrive.BlobQueryResponse._op_blobLinked.end(self, _r)
+
+        def blobUnlinked(self, context=None):
+            return _M_IceDrive.BlobQueryResponse._op_blobUnlinked.invoke(self, ((), context))
+
+        def blobUnlinkedAsync(self, context=None):
+            return _M_IceDrive.BlobQueryResponse._op_blobUnlinked.invokeAsync(self, ((), context))
+
+        def begin_blobUnlinked(self, _response=None, _ex=None, _sent=None, context=None):
+            return _M_IceDrive.BlobQueryResponse._op_blobUnlinked.begin(self, ((), _response, _ex, _sent, context))
+
+        def end_blobUnlinked(self, _r):
+            return _M_IceDrive.BlobQueryResponse._op_blobUnlinked.end(self, _r)
+
+        @staticmethod
+        def checkedCast(proxy, facetOrContext=None, context=None):
+            return _M_IceDrive.BlobQueryResponsePrx.ice_checkedCast(proxy, '::IceDrive::BlobQueryResponse', facetOrContext, context)
+
+        @staticmethod
+        def uncheckedCast(proxy, facet=None):
+            return _M_IceDrive.BlobQueryResponsePrx.ice_uncheckedCast(proxy, facet)
+
+        @staticmethod
+        def ice_staticId():
+            return '::IceDrive::BlobQueryResponse'
+    _M_IceDrive._t_BlobQueryResponsePrx = IcePy.defineProxy('::IceDrive::BlobQueryResponse', BlobQueryResponsePrx)
+
+    _M_IceDrive.BlobQueryResponsePrx = BlobQueryResponsePrx
+    del BlobQueryResponsePrx
+
+    _M_IceDrive.BlobQueryResponse = Ice.createTempClass()
+    class BlobQueryResponse(Ice.Object):
+
+        def ice_ids(self, current=None):
+            return ('::Ice::Object', '::IceDrive::BlobQueryResponse')
+
+        def ice_id(self, current=None):
+            return '::IceDrive::BlobQueryResponse'
+
+        @staticmethod
+        def ice_staticId():
+            return '::IceDrive::BlobQueryResponse'
+
+        def downloadBlob(self, blob, current=None):
+            raise NotImplementedError("servant method 'downloadBlob' not implemented")
+
+        def blobExists(self, current=None):
+            raise NotImplementedError("servant method 'blobExists' not implemented")
+
+        def blobLinked(self, current=None):
+            raise NotImplementedError("servant method 'blobLinked' not implemented")
+
+        def blobUnlinked(self, current=None):
+            raise NotImplementedError("servant method 'blobUnlinked' not implemented")
+
+        def __str__(self):
+            return IcePy.stringify(self, _M_IceDrive._t_BlobQueryResponseDisp)
+
+        __repr__ = __str__
+
+    _M_IceDrive._t_BlobQueryResponseDisp = IcePy.defineClass('::IceDrive::BlobQueryResponse', BlobQueryResponse, (), None, ())
+    BlobQueryResponse._ice_type = _M_IceDrive._t_BlobQueryResponseDisp
+
+    BlobQueryResponse._op_downloadBlob = IcePy.Operation('downloadBlob', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), _M_IceDrive._t_DataTransferPrx, False, 0),), (), None, ())
+    BlobQueryResponse._op_blobExists = IcePy.Operation('blobExists', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), None, ())
+    BlobQueryResponse._op_blobLinked = IcePy.Operation('blobLinked', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), None, ())
+    BlobQueryResponse._op_blobUnlinked = IcePy.Operation('blobUnlinked', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), None, ())
+
+    _M_IceDrive.BlobQueryResponse = BlobQueryResponse
+    del BlobQueryResponse
+
+_M_IceDrive._t_BlobQuery = IcePy.defineValue('::IceDrive::BlobQuery', Ice.Value, -1, (), False, True, None, ())
+
+if 'BlobQueryPrx' not in _M_IceDrive.__dict__:
+    _M_IceDrive.BlobQueryPrx = Ice.createTempClass()
+    class BlobQueryPrx(Ice.ObjectPrx):
+
+        def downloadBlob(self, blobId, response, context=None):
+            return _M_IceDrive.BlobQuery._op_downloadBlob.invoke(self, ((blobId, response), context))
+
+        def downloadBlobAsync(self, blobId, response, context=None):
+            return _M_IceDrive.BlobQuery._op_downloadBlob.invokeAsync(self, ((blobId, response), context))
+
+        def begin_downloadBlob(self, blobId, response, _response=None, _ex=None, _sent=None, context=None):
+            return _M_IceDrive.BlobQuery._op_downloadBlob.begin(self, ((blobId, response), _response, _ex, _sent, context))
+
+        def end_downloadBlob(self, _r):
+            return _M_IceDrive.BlobQuery._op_downloadBlob.end(self, _r)
+
+        def blobIdExists(self, blobId, response, context=None):
+            return _M_IceDrive.BlobQuery._op_blobIdExists.invoke(self, ((blobId, response), context))
+
+        def blobIdExistsAsync(self, blobId, response, context=None):
+            return _M_IceDrive.BlobQuery._op_blobIdExists.invokeAsync(self, ((blobId, response), context))
+
+        def begin_blobIdExists(self, blobId, response, _response=None, _ex=None, _sent=None, context=None):
+            return _M_IceDrive.BlobQuery._op_blobIdExists.begin(self, ((blobId, response), _response, _ex, _sent, context))
+
+        def end_blobIdExists(self, _r):
+            return _M_IceDrive.BlobQuery._op_blobIdExists.end(self, _r)
+
+        def linkBlob(self, blobId, response, context=None):
+            return _M_IceDrive.BlobQuery._op_linkBlob.invoke(self, ((blobId, response), context))
+
+        def linkBlobAsync(self, blobId, response, context=None):
+            return _M_IceDrive.BlobQuery._op_linkBlob.invokeAsync(self, ((blobId, response), context))
+
+        def begin_linkBlob(self, blobId, response, _response=None, _ex=None, _sent=None, context=None):
+            return _M_IceDrive.BlobQuery._op_linkBlob.begin(self, ((blobId, response), _response, _ex, _sent, context))
+
+        def end_linkBlob(self, _r):
+            return _M_IceDrive.BlobQuery._op_linkBlob.end(self, _r)
+
+        def unlinkBlob(self, blobId, response, context=None):
+            return _M_IceDrive.BlobQuery._op_unlinkBlob.invoke(self, ((blobId, response), context))
+
+        def unlinkBlobAsync(self, blobId, response, context=None):
+            return _M_IceDrive.BlobQuery._op_unlinkBlob.invokeAsync(self, ((blobId, response), context))
+
+        def begin_unlinkBlob(self, blobId, response, _response=None, _ex=None, _sent=None, context=None):
+            return _M_IceDrive.BlobQuery._op_unlinkBlob.begin(self, ((blobId, response), _response, _ex, _sent, context))
+
+        def end_unlinkBlob(self, _r):
+            return _M_IceDrive.BlobQuery._op_unlinkBlob.end(self, _r)
+
+        @staticmethod
+        def checkedCast(proxy, facetOrContext=None, context=None):
+            return _M_IceDrive.BlobQueryPrx.ice_checkedCast(proxy, '::IceDrive::BlobQuery', facetOrContext, context)
+
+        @staticmethod
+        def uncheckedCast(proxy, facet=None):
+            return _M_IceDrive.BlobQueryPrx.ice_uncheckedCast(proxy, facet)
+
+        @staticmethod
+        def ice_staticId():
+            return '::IceDrive::BlobQuery'
+    _M_IceDrive._t_BlobQueryPrx = IcePy.defineProxy('::IceDrive::BlobQuery', BlobQueryPrx)
+
+    _M_IceDrive.BlobQueryPrx = BlobQueryPrx
+    del BlobQueryPrx
+
+    _M_IceDrive.BlobQuery = Ice.createTempClass()
+    class BlobQuery(Ice.Object):
+
+        def ice_ids(self, current=None):
+            return ('::Ice::Object', '::IceDrive::BlobQuery')
+
+        def ice_id(self, current=None):
+            return '::IceDrive::BlobQuery'
+
+        @staticmethod
+        def ice_staticId():
+            return '::IceDrive::BlobQuery'
+
+        def downloadBlob(self, blobId, response, current=None):
+            raise NotImplementedError("servant method 'downloadBlob' not implemented")
+
+        def blobIdExists(self, blobId, response, current=None):
+            raise NotImplementedError("servant method 'blobIdExists' not implemented")
+
+        def linkBlob(self, blobId, response, current=None):
+            raise NotImplementedError("servant method 'linkBlob' not implemented")
+
+        def unlinkBlob(self, blobId, response, current=None):
+            raise NotImplementedError("servant method 'unlinkBlob' not implemented")
+
+        def __str__(self):
+            return IcePy.stringify(self, _M_IceDrive._t_BlobQueryDisp)
+
+        __repr__ = __str__
+
+    _M_IceDrive._t_BlobQueryDisp = IcePy.defineClass('::IceDrive::BlobQuery', BlobQuery, (), None, ())
+    BlobQuery._ice_type = _M_IceDrive._t_BlobQueryDisp
+
+    BlobQuery._op_downloadBlob = IcePy.Operation('downloadBlob', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_string, False, 0), ((), _M_IceDrive._t_BlobQueryResponsePrx, False, 0)), (), None, ())
+    BlobQuery._op_blobIdExists = IcePy.Operation('blobIdExists', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_string, False, 0), ((), _M_IceDrive._t_BlobQueryResponsePrx, False, 0)), (), None, ())
+    BlobQuery._op_linkBlob = IcePy.Operation('linkBlob', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_string, False, 0), ((), _M_IceDrive._t_BlobQueryResponsePrx, False, 0)), (), None, ())
+    BlobQuery._op_unlinkBlob = IcePy.Operation('unlinkBlob', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_string, False, 0), ((), _M_IceDrive._t_BlobQueryResponsePrx, False, 0)), (), None, ())
+
+    _M_IceDrive.BlobQuery = BlobQuery
+    del BlobQuery
 
 _M_IceDrive._t_Directory = IcePy.defineValue('::IceDrive::Directory', Ice.Value, -1, (), False, True, None, ())
 
 if 'DirectoryPrx' not in _M_IceDrive.__dict__:
     _M_IceDrive.DirectoryPrx = Ice.createTempClass()
     class DirectoryPrx(Ice.ObjectPrx):
+
+        def getPath(self, context=None):
+            return _M_IceDrive.Directory._op_getPath.invoke(self, ((), context))
+
+        def getPathAsync(self, context=None):
+            return _M_IceDrive.Directory._op_getPath.invokeAsync(self, ((), context))
+
+        def begin_getPath(self, _response=None, _ex=None, _sent=None, context=None):
+            return _M_IceDrive.Directory._op_getPath.begin(self, ((), _response, _ex, _sent, context))
+
+        def end_getPath(self, _r):
+            return _M_IceDrive.Directory._op_getPath.end(self, _r)
 
         def getParent(self, context=None):
             return _M_IceDrive.Directory._op_getParent.invoke(self, ((), context))
@@ -764,6 +1239,9 @@ if 'DirectoryPrx' not in _M_IceDrive.__dict__:
         def ice_staticId():
             return '::IceDrive::Directory'
 
+        def getPath(self, current=None):
+            raise NotImplementedError("servant method 'getPath' not implemented")
+
         def getParent(self, current=None):
             raise NotImplementedError("servant method 'getParent' not implemented")
 
@@ -799,6 +1277,7 @@ if 'DirectoryPrx' not in _M_IceDrive.__dict__:
     _M_IceDrive._t_DirectoryDisp = IcePy.defineClass('::IceDrive::Directory', Directory, (), None, ())
     Directory._ice_type = _M_IceDrive._t_DirectoryDisp
 
+    Directory._op_getPath = IcePy.Operation('getPath', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), ((), IcePy._t_string, False, 0), ())
     Directory._op_getParent = IcePy.Operation('getParent', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), ((), _M_IceDrive._t_DirectoryPrx, False, 0), (_M_IceDrive._t_RootHasNoParent,))
     Directory._op_getChilds = IcePy.Operation('getChilds', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), ((), _M_IceDrive._t_Strings, False, 0), ())
     Directory._op_getChild = IcePy.Operation('getChild', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_string, False, 0),), (), ((), _M_IceDrive._t_DirectoryPrx, False, 0), (_M_IceDrive._t_ChildNotExists,))
@@ -806,8 +1285,8 @@ if 'DirectoryPrx' not in _M_IceDrive.__dict__:
     Directory._op_removeChild = IcePy.Operation('removeChild', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_string, False, 0),), (), None, (_M_IceDrive._t_ChildNotExists,))
     Directory._op_getFiles = IcePy.Operation('getFiles', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (), (), ((), _M_IceDrive._t_Strings, False, 0), ())
     Directory._op_getBlobId = IcePy.Operation('getBlobId', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_string, False, 0),), (), ((), IcePy._t_string, False, 0), (_M_IceDrive._t_FileNotFound,))
-    Directory._op_linkFile = IcePy.Operation('linkFile', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_string, False, 0), ((), IcePy._t_string, False, 0)), (), None, (_M_IceDrive._t_FileAlreadyExists,))
-    Directory._op_unlinkFile = IcePy.Operation('unlinkFile', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_string, False, 0),), (), None, (_M_IceDrive._t_FileNotFound,))
+    Directory._op_linkFile = IcePy.Operation('linkFile', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_string, False, 0), ((), IcePy._t_string, False, 0)), (), None, (_M_IceDrive._t_FileAlreadyExists, _M_IceDrive._t_TemporaryUnavailable))
+    Directory._op_unlinkFile = IcePy.Operation('unlinkFile', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_string, False, 0),), (), None, (_M_IceDrive._t_FileNotFound, _M_IceDrive._t_TemporaryUnavailable))
 
     _M_IceDrive.Directory = Directory
     del Directory
@@ -870,9 +1349,230 @@ if 'DirectoryServicePrx' not in _M_IceDrive.__dict__:
     _M_IceDrive._t_DirectoryServiceDisp = IcePy.defineClass('::IceDrive::DirectoryService', DirectoryService, (), None, ())
     DirectoryService._ice_type = _M_IceDrive._t_DirectoryServiceDisp
 
-    DirectoryService._op_getRoot = IcePy.Operation('getRoot', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), IcePy._t_string, False, 0),), (), ((), _M_IceDrive._t_DirectoryPrx, False, 0), ())
+    DirectoryService._op_getRoot = IcePy.Operation('getRoot', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), _M_IceDrive._t_UserPrx, False, 0),), (), ((), _M_IceDrive._t_DirectoryPrx, False, 0), (_M_IceDrive._t_TemporaryUnavailable,))
 
     _M_IceDrive.DirectoryService = DirectoryService
     del DirectoryService
+
+_M_IceDrive._t_DirectoryQueryResponse = IcePy.defineValue('::IceDrive::DirectoryQueryResponse', Ice.Value, -1, (), False, True, None, ())
+
+if 'DirectoryQueryResponsePrx' not in _M_IceDrive.__dict__:
+    _M_IceDrive.DirectoryQueryResponsePrx = Ice.createTempClass()
+    class DirectoryQueryResponsePrx(Ice.ObjectPrx):
+
+        def rootDirectoryResponse(self, root, context=None):
+            return _M_IceDrive.DirectoryQueryResponse._op_rootDirectoryResponse.invoke(self, ((root, ), context))
+
+        def rootDirectoryResponseAsync(self, root, context=None):
+            return _M_IceDrive.DirectoryQueryResponse._op_rootDirectoryResponse.invokeAsync(self, ((root, ), context))
+
+        def begin_rootDirectoryResponse(self, root, _response=None, _ex=None, _sent=None, context=None):
+            return _M_IceDrive.DirectoryQueryResponse._op_rootDirectoryResponse.begin(self, ((root, ), _response, _ex, _sent, context))
+
+        def end_rootDirectoryResponse(self, _r):
+            return _M_IceDrive.DirectoryQueryResponse._op_rootDirectoryResponse.end(self, _r)
+
+        @staticmethod
+        def checkedCast(proxy, facetOrContext=None, context=None):
+            return _M_IceDrive.DirectoryQueryResponsePrx.ice_checkedCast(proxy, '::IceDrive::DirectoryQueryResponse', facetOrContext, context)
+
+        @staticmethod
+        def uncheckedCast(proxy, facet=None):
+            return _M_IceDrive.DirectoryQueryResponsePrx.ice_uncheckedCast(proxy, facet)
+
+        @staticmethod
+        def ice_staticId():
+            return '::IceDrive::DirectoryQueryResponse'
+    _M_IceDrive._t_DirectoryQueryResponsePrx = IcePy.defineProxy('::IceDrive::DirectoryQueryResponse', DirectoryQueryResponsePrx)
+
+    _M_IceDrive.DirectoryQueryResponsePrx = DirectoryQueryResponsePrx
+    del DirectoryQueryResponsePrx
+
+    _M_IceDrive.DirectoryQueryResponse = Ice.createTempClass()
+    class DirectoryQueryResponse(Ice.Object):
+
+        def ice_ids(self, current=None):
+            return ('::Ice::Object', '::IceDrive::DirectoryQueryResponse')
+
+        def ice_id(self, current=None):
+            return '::IceDrive::DirectoryQueryResponse'
+
+        @staticmethod
+        def ice_staticId():
+            return '::IceDrive::DirectoryQueryResponse'
+
+        def rootDirectoryResponse(self, root, current=None):
+            raise NotImplementedError("servant method 'rootDirectoryResponse' not implemented")
+
+        def __str__(self):
+            return IcePy.stringify(self, _M_IceDrive._t_DirectoryQueryResponseDisp)
+
+        __repr__ = __str__
+
+    _M_IceDrive._t_DirectoryQueryResponseDisp = IcePy.defineClass('::IceDrive::DirectoryQueryResponse', DirectoryQueryResponse, (), None, ())
+    DirectoryQueryResponse._ice_type = _M_IceDrive._t_DirectoryQueryResponseDisp
+
+    DirectoryQueryResponse._op_rootDirectoryResponse = IcePy.Operation('rootDirectoryResponse', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), _M_IceDrive._t_DirectoryPrx, False, 0),), (), None, ())
+
+    _M_IceDrive.DirectoryQueryResponse = DirectoryQueryResponse
+    del DirectoryQueryResponse
+
+_M_IceDrive._t_DirectoryQuery = IcePy.defineValue('::IceDrive::DirectoryQuery', Ice.Value, -1, (), False, True, None, ())
+
+if 'DirectoryQueryPrx' not in _M_IceDrive.__dict__:
+    _M_IceDrive.DirectoryQueryPrx = Ice.createTempClass()
+    class DirectoryQueryPrx(Ice.ObjectPrx):
+
+        def rootDirectory(self, user, response, context=None):
+            return _M_IceDrive.DirectoryQuery._op_rootDirectory.invoke(self, ((user, response), context))
+
+        def rootDirectoryAsync(self, user, response, context=None):
+            return _M_IceDrive.DirectoryQuery._op_rootDirectory.invokeAsync(self, ((user, response), context))
+
+        def begin_rootDirectory(self, user, response, _response=None, _ex=None, _sent=None, context=None):
+            return _M_IceDrive.DirectoryQuery._op_rootDirectory.begin(self, ((user, response), _response, _ex, _sent, context))
+
+        def end_rootDirectory(self, _r):
+            return _M_IceDrive.DirectoryQuery._op_rootDirectory.end(self, _r)
+
+        @staticmethod
+        def checkedCast(proxy, facetOrContext=None, context=None):
+            return _M_IceDrive.DirectoryQueryPrx.ice_checkedCast(proxy, '::IceDrive::DirectoryQuery', facetOrContext, context)
+
+        @staticmethod
+        def uncheckedCast(proxy, facet=None):
+            return _M_IceDrive.DirectoryQueryPrx.ice_uncheckedCast(proxy, facet)
+
+        @staticmethod
+        def ice_staticId():
+            return '::IceDrive::DirectoryQuery'
+    _M_IceDrive._t_DirectoryQueryPrx = IcePy.defineProxy('::IceDrive::DirectoryQuery', DirectoryQueryPrx)
+
+    _M_IceDrive.DirectoryQueryPrx = DirectoryQueryPrx
+    del DirectoryQueryPrx
+
+    _M_IceDrive.DirectoryQuery = Ice.createTempClass()
+    class DirectoryQuery(Ice.Object):
+
+        def ice_ids(self, current=None):
+            return ('::Ice::Object', '::IceDrive::DirectoryQuery')
+
+        def ice_id(self, current=None):
+            return '::IceDrive::DirectoryQuery'
+
+        @staticmethod
+        def ice_staticId():
+            return '::IceDrive::DirectoryQuery'
+
+        def rootDirectory(self, user, response, current=None):
+            raise NotImplementedError("servant method 'rootDirectory' not implemented")
+
+        def __str__(self):
+            return IcePy.stringify(self, _M_IceDrive._t_DirectoryQueryDisp)
+
+        __repr__ = __str__
+
+    _M_IceDrive._t_DirectoryQueryDisp = IcePy.defineClass('::IceDrive::DirectoryQuery', DirectoryQuery, (), None, ())
+    DirectoryQuery._ice_type = _M_IceDrive._t_DirectoryQueryDisp
+
+    DirectoryQuery._op_rootDirectory = IcePy.Operation('rootDirectory', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), _M_IceDrive._t_UserPrx, False, 0), ((), _M_IceDrive._t_DirectoryQueryResponsePrx, False, 0)), (), None, ())
+
+    _M_IceDrive.DirectoryQuery = DirectoryQuery
+    del DirectoryQuery
+
+_M_IceDrive._t_Discovery = IcePy.defineValue('::IceDrive::Discovery', Ice.Value, -1, (), False, True, None, ())
+
+if 'DiscoveryPrx' not in _M_IceDrive.__dict__:
+    _M_IceDrive.DiscoveryPrx = Ice.createTempClass()
+    class DiscoveryPrx(Ice.ObjectPrx):
+
+        def announceAuthentication(self, prx, context=None):
+            return _M_IceDrive.Discovery._op_announceAuthentication.invoke(self, ((prx, ), context))
+
+        def announceAuthenticationAsync(self, prx, context=None):
+            return _M_IceDrive.Discovery._op_announceAuthentication.invokeAsync(self, ((prx, ), context))
+
+        def begin_announceAuthentication(self, prx, _response=None, _ex=None, _sent=None, context=None):
+            return _M_IceDrive.Discovery._op_announceAuthentication.begin(self, ((prx, ), _response, _ex, _sent, context))
+
+        def end_announceAuthentication(self, _r):
+            return _M_IceDrive.Discovery._op_announceAuthentication.end(self, _r)
+
+        def announceDirectoryServicey(self, prx, context=None):
+            return _M_IceDrive.Discovery._op_announceDirectoryServicey.invoke(self, ((prx, ), context))
+
+        def announceDirectoryServiceyAsync(self, prx, context=None):
+            return _M_IceDrive.Discovery._op_announceDirectoryServicey.invokeAsync(self, ((prx, ), context))
+
+        def begin_announceDirectoryServicey(self, prx, _response=None, _ex=None, _sent=None, context=None):
+            return _M_IceDrive.Discovery._op_announceDirectoryServicey.begin(self, ((prx, ), _response, _ex, _sent, context))
+
+        def end_announceDirectoryServicey(self, _r):
+            return _M_IceDrive.Discovery._op_announceDirectoryServicey.end(self, _r)
+
+        def announceBlobService(self, prx, context=None):
+            return _M_IceDrive.Discovery._op_announceBlobService.invoke(self, ((prx, ), context))
+
+        def announceBlobServiceAsync(self, prx, context=None):
+            return _M_IceDrive.Discovery._op_announceBlobService.invokeAsync(self, ((prx, ), context))
+
+        def begin_announceBlobService(self, prx, _response=None, _ex=None, _sent=None, context=None):
+            return _M_IceDrive.Discovery._op_announceBlobService.begin(self, ((prx, ), _response, _ex, _sent, context))
+
+        def end_announceBlobService(self, _r):
+            return _M_IceDrive.Discovery._op_announceBlobService.end(self, _r)
+
+        @staticmethod
+        def checkedCast(proxy, facetOrContext=None, context=None):
+            return _M_IceDrive.DiscoveryPrx.ice_checkedCast(proxy, '::IceDrive::Discovery', facetOrContext, context)
+
+        @staticmethod
+        def uncheckedCast(proxy, facet=None):
+            return _M_IceDrive.DiscoveryPrx.ice_uncheckedCast(proxy, facet)
+
+        @staticmethod
+        def ice_staticId():
+            return '::IceDrive::Discovery'
+    _M_IceDrive._t_DiscoveryPrx = IcePy.defineProxy('::IceDrive::Discovery', DiscoveryPrx)
+
+    _M_IceDrive.DiscoveryPrx = DiscoveryPrx
+    del DiscoveryPrx
+
+    _M_IceDrive.Discovery = Ice.createTempClass()
+    class Discovery(Ice.Object):
+
+        def ice_ids(self, current=None):
+            return ('::Ice::Object', '::IceDrive::Discovery')
+
+        def ice_id(self, current=None):
+            return '::IceDrive::Discovery'
+
+        @staticmethod
+        def ice_staticId():
+            return '::IceDrive::Discovery'
+
+        def announceAuthentication(self, prx, current=None):
+            raise NotImplementedError("servant method 'announceAuthentication' not implemented")
+
+        def announceDirectoryServicey(self, prx, current=None):
+            raise NotImplementedError("servant method 'announceDirectoryServicey' not implemented")
+
+        def announceBlobService(self, prx, current=None):
+            raise NotImplementedError("servant method 'announceBlobService' not implemented")
+
+        def __str__(self):
+            return IcePy.stringify(self, _M_IceDrive._t_DiscoveryDisp)
+
+        __repr__ = __str__
+
+    _M_IceDrive._t_DiscoveryDisp = IcePy.defineClass('::IceDrive::Discovery', Discovery, (), None, ())
+    Discovery._ice_type = _M_IceDrive._t_DiscoveryDisp
+
+    Discovery._op_announceAuthentication = IcePy.Operation('announceAuthentication', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), _M_IceDrive._t_AuthenticationPrx, False, 0),), (), None, ())
+    Discovery._op_announceDirectoryServicey = IcePy.Operation('announceDirectoryServicey', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), _M_IceDrive._t_DirectoryServicePrx, False, 0),), (), None, ())
+    Discovery._op_announceBlobService = IcePy.Operation('announceBlobService', Ice.OperationMode.Normal, Ice.OperationMode.Normal, False, None, (), (((), _M_IceDrive._t_BlobServicePrx, False, 0),), (), None, ())
+
+    _M_IceDrive.Discovery = Discovery
+    del Discovery
 
 # End of module IceDrive
