@@ -6,13 +6,16 @@ import json
 import uuid as UD
 import Ice
 import IceDrive
+import Discovery
+import DirectoryQueryResponse
+import DirectoryQuery
 
 class Directory(IceDrive.Directory):
     """Implementation of the IceDrive.Directory interface."""
     def __init__(self, name, user, parent=None):
         """Create the Directory"""
         self.name = name
-        self.user = user
+        self.user = user  # Must be a UserPrx
         self.parent = parent
         self.childs = {}
         self.files = {}
@@ -41,7 +44,7 @@ class Directory(IceDrive.Directory):
     def createChild(self, name: str, current: Ice.Current = None) -> IceDrive.DirectoryPrx:
         """Create a new child directory and returns its proxy."""
         if name not in self.childs:  # Check if it already exists
-            child = Directory(name, self.user, parent=self)  # Create the child
+            child = Directory(name, self.user.getUsername(), parent=self)  # Create the child
             self.childs[name] = child  # Add the child to the dictionary
             proxy = current.adapter.addWithUUID(child)
             self.saveToJson()
@@ -76,6 +79,8 @@ class Directory(IceDrive.Directory):
         else:  # If it already exists, throw exception
             raise FileAlreadyExists(filename)
 
+        # TODO: Call the unlinkFile from a BlobPrx
+
     def unlinkFile(self, filename: str, current: Ice.Current = None) -> None:
         """Unlink (remove) a filename from the current directory."""
         if filename in self.files:  # Check if it exists
@@ -83,6 +88,8 @@ class Directory(IceDrive.Directory):
             self.saveToJson()
         else:  # If it doesn"t exist, throw exception
             raise FileNotFound(filename)
+
+        # TODO: Call the unlinkFile from a BlobPrx
    
     def getPath(self):
         """Get the path from root to the current dir"""
@@ -107,7 +114,7 @@ class Directory(IceDrive.Directory):
         """Recursively serialize the directory structure."""
         data = {
             'name': self.name,
-            'user': self.user,
+            'user': self.user.getUsername(),
             'childs': {name: child.serialize() for name, child in self.childs.items()},
             'files': self.files
         }
@@ -119,6 +126,9 @@ class Directory(IceDrive.Directory):
             data = json.load(json_file)
             self.name = data['name']
             self.user = data['user']
+
+            # TODO: The user loaded must be obtained from the root, not from here, remove saving of username
+
             self.files = data['files']
             self.childs = {name: self.loadChildFromJson(child_data) for
                 name, child_data in data['childs'].items()}
@@ -144,14 +154,24 @@ class DirectoryService(IceDrive.DirectoryService):
         self.dataDir = "./USRDIRS/"
         os.makedirs(self.dataDir, exist_ok=True)
 
-    def getRoot(self, user: str, current: Ice.Current = None) -> IceDrive.DirectoryPrx:
+    def getRoot(self, user: IceDrive.UserPrx, current: Ice.Current = None) -> IceDrive.DirectoryPrx:
         """Return the proxy for the root directory of the given user."""
-        json_path = os.path.join(self.dataDir, f"{self.genUUID(user)}.json")
-        if os.path.exists(json_path):
-            root = Directory(name="root", user=user)
+        self.user = user  # Get the username of the user object
+        json_path = os.path.join(self.dataDir, f"{self.genUUID(self.user.getUsername())}.json")
+
+        # TODO: Check if other instances have it before creating a new root (use a thread)
+        # TODO: Check isAlive on each action so it only gets access if the credentials are updated
+
+        if os.path.exists(json_path):  # Check for an existing root
+            root = Directory(name="root", user=self.user)
             root.loadFromJson(json_path)
-        else:
-            root = Directory(name="root", user=user)
+        elif ():  # Check if other instances have it
+            pass
+        
+            # TODO: Try differed resolution, if none in 5 seconds, create a new root directory
+            
+        else:  # No instance has it, create a new one
+            root = Directory(name="root", user=self.user)
             root.saveToJson()
         proxy = current.adapter.addWithUUID(root)
         return IceDrive.DirectoryPrx.uncheckedCast(proxy)
@@ -187,3 +207,7 @@ class FileAlreadyExists(Exception):
 class FileNotFound(Exception):
     def __init__(self, filename):
         super().__init__(f"File \"{filename}\" not found in the directory")
+
+class TemporaryUnavailable(Exception):
+    def __init__(self, serviceName):
+        super().__init__(f"Service: \"{serviceName}\" is not available at the moment")

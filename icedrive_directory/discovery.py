@@ -8,6 +8,12 @@ import IceDrive
 class Discovery(IceDrive.Discovery):
     """Servants class for service discovery."""
 
+    def __init__(self):
+        """Keep a list of discovered services"""
+        self.discAuthenticators = {}  # Discovered authenticator services
+        self.discDirectoryServices = {}  # Discovered directory services
+        self.discBlobServices = {}  # Discovered blob services
+
     def announceAuthentication(self, prx: IceDrive.AuthenticationPrx, current: Ice.Current = None) -> None:
         """Receive an Authentication service announcement."""
 
