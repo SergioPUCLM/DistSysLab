@@ -1,0 +1,1 @@
+{"name": "root", "user": "Juan", "childs": {"Documents": {"name": "Documents", "user": "Juan", "childs": {}, "files": {"file1.txt": "blob1"}}}, "files": {}}

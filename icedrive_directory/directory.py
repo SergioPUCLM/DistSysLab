@@ -21,68 +21,75 @@ class Directory(IceDrive.Directory):
     def getParent(self, current: Ice.Current = None) -> IceDrive.DirectoryPrx:
         """Return the proxy to the parent directory, if it exists. None in other case."""
         if self.parent is not None:
+            print(f'Parent of {self.name} requested: {self.parent}')
             proxy = current.adapter.addWithUUID(self.parent)
             return IceDrive.DirectoryPrx.uncheckedCast(proxy)
-        else:
-            raise RootHasNoParent(self.name)
+        raise IceDrive.RootHasNoParent()
 
     def getChilds(self, current: Ice.Current = None) -> List[str]:
+        print(f'List of childs of {self.name} requested: {self.childs.keys()}')
         """Return a list of names of the directories contained in the directory."""
         return list(self.childs.keys())
 
     def getChild(self, name: str, current: Ice.Current = None) -> IceDrive.DirectoryPrx:
         """Return the proxy to one specific directory inside the current one."""
         try:
+            print(f'Child of {self.name}, {self.childs[name]} requested')
             proxy = current.adapter.addWithUUID(self.childs[name])
             return IceDrive.DirectoryPrx.uncheckedCast(proxy)
-        except KeyError:
-            raise ChildNotExists(name, path=self.getPath()) from KeyError
+        except KeyError as e:
+            raise IceDrive.ChildNotExists(name, path=self.getPath())
 
     def createChild(self, name: str, current: Ice.Current = None) -> IceDrive.DirectoryPrx:
         """Create a new child directory and returns its proxy."""
         if name not in self.childs:  # Check if it already exists
+            print(f'Request to create directory {name} in {self.name}')
             child = Directory(name, self.user, parent=self)  # Create the child
             self.childs[name] = child  # Add the child to the dictionary
             proxy = current.adapter.addWithUUID(child)
             self.saveToJson()
             return IceDrive.DirectoryPrx.uncheckedCast(proxy)
-        else:  # If it already exists throw an exception
-            raise ChildAlreadyExists(name, path=self.getPath())  
+        raise IceDrive.ChildAlreadyExists(name, path=self.getPath())  
 
     def removeChild(self, name: str, current: Ice.Current = None) -> None:
         """Remove the child directory with the given name if exists."""
         if name in self.childs:  # Check if the child exists
+            print(f'Remove the child {name} from {self.name}')
             del self.childs[name]  # Delete the child
             self.saveToJson()
-        else:  # If it does not exist, throw exception
-            raise ChildNotExists(name, path=self.getPath())
+        else:
+            raise IceDrive.ChildNotExists(name, path=self.getPath())
 
     def getFiles(self, current: Ice.Current = None) -> List[str]:
         """Return a list of the files linked inside the current directory."""
+        print(f'Request to list files in {self.name}')
         return list(self.files.keys())
 
     def getBlobId(self, filename: str, current: Ice.Current = None) -> str:
         """Return the "blob id" for a given file name inside the directory."""
         try:
             return self.files[filename]
-        except KeyError:
-            raise FileNotFound(filename) from KeyError
+            print(f'Request to get BlobId of {filename}: {self.files[filename]}')
+        except KeyError as e:
+            raise IceDrive.FileNotFound(filename)
 
     def linkFile(self, filename: str, blob_id: str, current: Ice.Current = None) -> None:
         """Link a file to a given blob_id."""
         if filename not in self.files:  # Check if the file exists
+            print(f'Request to link file {filename} to {self.name}')
             self.files[filename] = blob_id  # Create and add the file
             self.saveToJson()
-        else:  # If it already exists, throw exception
-            raise FileAlreadyExists(filename)
+        else:
+            raise IceDrive.FileAlreadyExists(filename)
 
     def unlinkFile(self, filename: str, current: Ice.Current = None) -> None:
         """Unlink (remove) a filename from the current directory."""
         if filename in self.files:  # Check if it exists
+            print(f'Request to unlink file {filename} from {self.name}')
             del self.files[filename]  # Delete the file
             self.saveToJson()
-        else:  # If it doesn"t exist, throw exception
-            raise FileNotFound(filename)
+        else:
+            raise IceDrive.FileNotFound(filename)
    
     def getPath(self):
         """Get the path from root to the current dir"""
@@ -147,6 +154,7 @@ class DirectoryService(IceDrive.DirectoryService):
     def getRoot(self, user: str, current: Ice.Current = None) -> IceDrive.DirectoryPrx:
         """Return the proxy for the root directory of the given user."""
         json_path = os.path.join(self.dataDir, f"{self.genUUID(user)}.json")
+        print(f'Request to get root of {user}')
         if os.path.exists(json_path):
             root = Directory(name="root", user=user)
             root.loadFromJson(json_path)
@@ -161,29 +169,3 @@ class DirectoryService(IceDrive.DirectoryService):
         namespace = UD.UUID("6ba7b810-9dad-11d1-80b4-00c04fd430c8")
         uuid = UD.uuid5(namespace, user)
         return str(uuid)
-
-
-# Exceptions: 
-class RootHasNoParent(Exception):
-    def __init__(self, name):
-        super().__init__(f"Directory \"{name}\" is a root directory and therefore has no parent")
-
-
-class ChildAlreadyExists(Exception):
-    def __init__(self, childName, path):
-        super().__init__(f"Child directory \"{childName}\" already exists in path: {path}")
-
-
-class ChildNotExists(Exception):
-    def __init__(self, childName, path):
-        super().__init__(f"Child directory \"{childName}\" does not exist in path: {path}")
-
-
-class FileAlreadyExists(Exception):
-    def __init__(self, filename):
-        super().__init__(f"File \"{filename}\" already exists in the directory")
-
-
-class FileNotFound(Exception):
-    def __init__(self, filename):
-        super().__init__(f"File \"{filename}\" not found in the directory")
