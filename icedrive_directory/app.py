@@ -41,18 +41,73 @@ class ClientApp(Ice.Application):
             print(f"Proxy {server_proxy} is not available.")
             return 2
 
-        # USER TEST:
-        self.user = "Sergio"
+        # RUBRIC TEST CASES
+        self.juan = "Juan"
+        root_juan = server_proxy.getRoot(self.juan)
 
-        # Get root directory proxy for the user
-        root_directory = server_proxy.getRoot(self.user)
 
-        child3 = root_directory.createChild("Videos")
+        # Requirement 4 <- Problematic
+        try:
+            root_parent_juan = root_juan.getParent()
+        except IceDrive.RootHasNoParent as e:
+            print(f'Caught IceDrive.RootHasNoParent exception: {e}')
+        input("Requirement 4 completed [Problematic], press enter")
 
-        # Create directories and files
-        child1 = root_directory.createChild("Documents")
-        child2 = root_directory.createChild("Pictures")
-        child2 = root_directory.createChild("Images")
-        root_directory.linkFile("file1.txt", "blob1")
-        child1.linkFile("file2.txt", "blob2")
-        return 0
+        documents_juan = root_juan.createChild("Documents")
+
+        # Requirement 7 <- Problematic
+        try:
+            non_existant_juan = root_juan.getChild("Non-Existant-Directory")
+        except IceDrive.ChildNotExists as e:
+            print(f'Caught IceDrive.ChildNotExists exception: {e}')
+        input("Requirement 7 completed [Problematic], press enter")
+
+        images_juan = root_juan.createChild("Images")
+
+        # Requirement 10 <- Problematic
+        try:
+            images_juan = root_juan.createChild("Images")
+            print(f'root_juan[childs]: {root_juan.getChilds()}')
+        except IceDrive.ChildAlreadyExists as e:
+            print(f'Caught IceDrive.ChildAlreadyExists exception: {e}')
+        input("Requirement 10 completed [Problematic], press enter")
+
+        root_juan.removeChild("Images")
+        documents_juan.linkFile("file1.txt", "blob1")
+
+        # Requirement 15 <- Problematic
+        try:
+            print(f'documents_juan/naf.f[blobid]: {documents_juan.getBlobId("naf.f")}')
+            print(f'documents_juan[files]: {documents_juan.getFiles()}')
+        except IceDrive.FileNotFound as e:
+            print(f'Caught IceDrive.FileNotFound exception: {e}')
+        input("Requirement 15 completed [Problematic], press enter")
+
+        documents_juan.linkFile("file2.txt", "blob2")
+
+        print(f'documents_juan[files]: {documents_juan.getFiles()}')
+
+        # Requirement 19 <- Problematic
+        try:
+            documents_juan.linkFile("file2.txt", "blob2")
+        except IceDrive.FileAlreadyExists as e:
+            print(f'Caught IceDrive.FileAlreadyExists exception: {e}')
+        input("Requirement 19 completed [Problematic], press enter")
+
+        documents_juan.unlinkFile("file2.txt")
+
+        # Requirement 22 <- Problematico
+        try:
+            print(f'documents_juan/file2.txt[blobid]: {documents_juan.getBlobId("file2.txt")}')
+            print(f'documents_juan[files]: {documents_juan.getFiles()}')
+        except IceDrive.FileNotFound as e:
+            print(f'Caught IceDrive.FileNotFound exception: {e}')
+        input("Requirement 22 completed [Problematic], press enter")
+
+        # Requirement 23 <- Problematico
+        try:
+            documents_juan.unlinkFile("naf.f")
+            print(f'documents_juan[files]: {documents_juan.getFiles()}')
+        except IceDrive.FileNotFound as e:
+            print(f'Caught IceDrive.FileNotFound exception: {e}')
+        input("Requirement 23 completed [Problematic], press enter")
