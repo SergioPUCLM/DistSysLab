@@ -8,6 +8,7 @@ import Ice
 import IceDrive
 
 from icedrive_directory.directory import DirectoryService
+from icedrive_directory.discovery import Discovery
 
 class DirectoryApp(Ice.Application):
     """Implementation of the Ice.Application for the Directory service."""
@@ -21,6 +22,17 @@ class DirectoryApp(Ice.Application):
         servant_proxy = adapter.addWithUUID(servant)
 
         logging.info("Proxy: %s", servant_proxy)
+
+        discovery_adapter = self.communicator().createObjectAdapter("DiscoveryAdapter")
+        discovery_adapter.activate()
+
+        discovery_servant = Discovery()
+        discovery_servant_proxy = discovery_adapter.addWithUUID(discovery_servant)
+
+        logging.info("Discovery proxy: %s", discovery_servant_proxy)
+
+        # Start the announcements
+        discovery_servant.announceDirectoryService(servant)
 
         self.shutdownOnInterrupt()
         self.communicator().waitForShutdown()

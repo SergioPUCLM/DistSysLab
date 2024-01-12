@@ -25,83 +25,93 @@ class Directory(IceDrive.Directory):
 
     def getParent(self, current: Ice.Current = None) -> IceDrive.DirectoryPrx:
         """Return the proxy to the parent directory, if it exists. None in other case."""
-        if self.parent is not None:
-            print(f'Parent of {self.name} requested: {self.parent}')
-            proxy = current.adapter.addWithUUID(self.parent)
-            return IceDrive.DirectoryPrx.uncheckedCast(proxy)
-        raise IceDrive.RootHasNoParent()
+        if self.userObj.isAlive():
+            if self.parent is not None:
+                print(f'Parent of {self.name} requested: {self.parent}')
+                proxy = current.adapter.addWithUUID(self.parent)
+                return IceDrive.DirectoryPrx.uncheckedCast(proxy)
+            raise IceDrive.RootHasNoParent()
 
     def getChilds(self, current: Ice.Current = None) -> List[str]:
-        print(f'List of childs of {self.name} requested: {self.childs.keys()}')
         """Return a list of names of the directories contained in the directory."""
-        return list(self.childs.keys())
+        if self.userObj.isAlive():
+            print(f'List of childs of {self.name} requested: {self.childs.keys()}')
+            return list(self.childs.keys())
 
     def getChild(self, name: str, current: Ice.Current = None) -> IceDrive.DirectoryPrx:
         """Return the proxy to one specific directory inside the current one."""
-        try:
-            print(f'Child of {self.name}, {self.childs[name]} requested')
-            proxy = current.adapter.addWithUUID(self.childs[name])
-            return IceDrive.DirectoryPrx.uncheckedCast(proxy)
-        except KeyError as e:
-            raise IceDrive.ChildNotExists(name, path=self.getPath())
+        if self.userObj.isAlive():
+            try:
+                print(f'Child of {self.name}, {self.childs[name]} requested')
+                proxy = current.adapter.addWithUUID(self.childs[name])
+                return IceDrive.DirectoryPrx.uncheckedCast(proxy)
+            except KeyError as e:
+                raise IceDrive.ChildNotExists(name, path=self.getPath())
 
     def createChild(self, name: str, current: Ice.Current = None) -> IceDrive.DirectoryPrx:
         """Create a new child directory and returns its proxy."""
-        if name not in self.childs:  # Check if it already exists
-            print(f'Request to create directory {name} in {self.name}')
-            child = Directory(name, self.userObj, parent=self)  # Create the child
-            self.childs[name] = child  # Add the child to the dictionary
-            proxy = current.adapter.addWithUUID(child)
-            self.saveToJson()
-            return IceDrive.DirectoryPrx.uncheckedCast(proxy)
-        raise IceDrive.ChildAlreadyExists(name, path=self.getPath())  
+        if self.userObj.isAlive():
+            if name not in self.childs:  # Check if it already exists
+                print(f'Request to create directory {name} in {self.name}')
+                child = Directory(name, self.userObj, parent=self)  # Create the child
+                self.childs[name] = child  # Add the child to the dictionary
+                proxy = current.adapter.addWithUUID(child)
+                self.saveToJson()
+                return IceDrive.DirectoryPrx.uncheckedCast(proxy)
+            raise IceDrive.ChildAlreadyExists(name, path=self.getPath())  
 
     def removeChild(self, name: str, current: Ice.Current = None) -> None:
         """Remove the child directory with the given name if exists."""
-        if name in self.childs:  # Check if the child exists
-            print(f'Remove the child {name} from {self.name}')
-            del self.childs[name]  # Delete the child
-            self.saveToJson()
-        else:
-            raise IceDrive.ChildNotExists(name, path=self.getPath())
+        if self.userObj.isAlive():
+            if name in self.childs:  # Check if the child exists
+                print(f'Remove the child {name} from {self.name}')
+                del self.childs[name]  # Delete the child
+                self.saveToJson()
+            else:
+                raise IceDrive.ChildNotExists(name, path=self.getPath())
 
     def getFiles(self, current: Ice.Current = None) -> List[str]:
         """Return a list of the files linked inside the current directory."""
-        print(f'Request to list files in {self.name}')
-        return list(self.files.keys())
+        if self.userObj.isAlive():
+            print(f'Request to list files in {self.name}')
+            return list(self.files.keys())
 
     def getBlobId(self, filename: str, current: Ice.Current = None) -> str:
         """Return the "blob id" for a given file name inside the directory."""
-        try:
-            return self.files[filename]
-            print(f'Request to get BlobId of {filename}: {self.files[filename]}')
-        except KeyError as e:
-            raise IceDrive.FileNotFound(filename)
+        if self.userObj.isAlive():
+            try:
+                return self.files[filename]
+                print(f'Request to get BlobId of {filename}: {self.files[filename]}')
+            except KeyError as e:
+                raise IceDrive.FileNotFound(filename)
 
     def linkFile(self, filename: str, blob_id: str, current: Ice.Current = None) -> None:
         """Link a file to a given blob_id."""
-        if filename not in self.files:  # Check if the file exists
-            print(f'Request to link file {filename} to {self.name}')
-            self.files[filename] = blob_id  # Create and add the file
-            self.saveToJson()
-        else:
-            raise IceDrive.FileAlreadyExists(filename)
+        if self.userObj.isAlive():
+            if filename not in self.files:  # Check if the file exists
+                print(f'Request to link file {filename} to {self.name}')
+                self.files[filename] = blob_id  # Create and add the file
+                self.saveToJson()
+            else:
+                raise IceDrive.FileAlreadyExists(filename)
 
     def unlinkFile(self, filename: str, current: Ice.Current = None) -> None:
         """Unlink (remove) a filename from the current directory."""
-        if filename in self.files:  # Check if it exists
-            print(f'Request to unlink file {filename} from {self.name}')
-            del self.files[filename]  # Delete the file
-            self.saveToJson()
-        else:
-            raise IceDrive.FileNotFound(filename)
+        if self.userObj.isAlive():
+            if filename in self.files:  # Check if it exists
+                print(f'Request to unlink file {filename} from {self.name}')
+                del self.files[filename]  # Delete the file
+                self.saveToJson()
+            else:
+                raise IceDrive.FileNotFound(filename)
    
     def getPath(self, current: Ice.Current = None) -> str:
         """Get the path from root to the current dir"""
-        if self.parent:  # Check if it has a parent (is not root)
-            return os.path.join(self.parent.getPath(), self.name)  # Recursive
-        else:
-            return ""
+        if self.userObj.isAlive():
+            if self.parent:  # Check if it has a parent (is not root)
+                return os.path.join(self.parent.getPath(), self.name)  # Recursive
+            else:
+                return ""
 
     def saveToJson(self):
         """Save the entire directory structure to a JSON file."""
@@ -165,14 +175,15 @@ class DirectoryService(IceDrive.DirectoryService):
         self.user = UserPrx.getUsername()
         json_path = os.path.join(self.dataDir, f"{self.genUUID(self.user)}.json")
         print(f'Request to get root of {user}')
-        if os.path.exists(json_path):  # Root already exists
-            root = Directory(name="root", user=user)
-            root.loadFromJson(json_path)
-        else:  # Root does not exist
-            root = Directory(name="root", user=user)
-            root.saveToJson()
-        proxy = current.adapter.addWithUUID(root)
-        return IceDrive.DirectoryPrx.uncheckedCast(proxy)
+        if user.isAlive():
+            if os.path.exists(json_path):  # Root already exists
+                root = Directory(name="root", user=user)
+                root.loadFromJson(json_path)
+            else:  # Root does not exist
+                root = Directory(name="root", user=user)
+                root.saveToJson()
+            proxy = current.adapter.addWithUUID(root)
+            return IceDrive.DirectoryPrx.uncheckedCast(proxy)
 
     def genUUID(self, user):
         """Generate or resolve a unique user UUID"""
