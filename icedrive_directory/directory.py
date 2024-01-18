@@ -6,14 +6,14 @@ import json
 import uuid as UD
 import Ice
 import IceDrive
-import Discovery
-import DirectoryQueryResponse
-import DirectoryQuery
+from .discovery import Discovery
+from .delayed_response import DirectoryQueryResponse
+from .delayed_response import DirectoryQuery
 
 
 class Directory(IceDrive.Directory):
     """Implementation of the IceDrive.Directory interface."""
-    def __init__(self, name, user, parent=None):
+    def __init__(self, name, user: IceDrive.UserPrx, parent=None):
         """Create the Directory"""
         self.name = name
         self.userObj = user
@@ -168,11 +168,11 @@ class DirectoryService(IceDrive.DirectoryService):
         self.dataDir = "./USRDIRS/"
         os.makedirs(self.dataDir, exist_ok=True)
 
-    def getRoot(self, user: UserPrx, current: Ice.Current = None) -> IceDrive.DirectoryPrx:
+    def getRoot(self, user: IceDrive.UserPrx, current: Ice.Current = None) -> IceDrive.DirectoryPrx:
         """Return the proxy for the root directory of the given user."""
         # user = UserPrx
         # self.user = Username
-        self.user = UserPrx.getUsername()
+        self.user = user.getUsername()
         json_path = os.path.join(self.dataDir, f"{self.genUUID(self.user)}.json")
         print(f'Request to get root of {user}')
         if user.isAlive():
