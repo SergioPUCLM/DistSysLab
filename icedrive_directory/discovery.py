@@ -7,43 +7,43 @@ import IceDrive
 
 class Discovery(IceDrive.Discovery):
     """Servants class for service discovery."""
-    def __init__(self):
-        """Keep a list of discovered services"""
-        self.authenticators = {}  # Discovered authentication services
-        self.directories = {}  # Discovered directory services
-        self.blobs = {}  # Discovered blob services
+
+    # Global dictionaries so any object can access them
+    authenticators = {}  # Discovered authentication services
+    directories = {}  # Discovered directory services
+    blobs = {}  # Discovered blob services
 
     def announceAuthentication(self, prx: IceDrive.AuthenticationPrx, current: Ice.Current = None) -> None:
         """Receive an Authentication service announcement.""" 
         identity = prx.ice_getIdentity()
-        if not(identity in self.authenticators):
+        if not(identity in Discovery.authenticators):
             print(f'Authenticator service found: {prx}')
-            self.authenticators[identity] = prx
+            Discovery.authenticators[identity] = prx
 
     def announceDirectoryService(self, prx: IceDrive.DirectoryServicePrx, current: Ice.Current = None) -> None:
         """Receive an Directory service announcement."""
         identity = prx.ice_getIdentity()
-        if not(identity in self.directories):
+        if not(identity in Discovery.directories):
             print(f'Directory service found: {prx}')
-            self.directories[identity] = prx       
+            Discovery.directories[identity] = prx       
 
     def announceBlobService(self, prx: IceDrive.BlobServicePrx, current: Ice.Current = None) -> None:
         """Receive an Blob service announcement."""
         identity = prx.ice_getIdentity()
-        if not(identity in self.blobs):
+        if not(identity in Discovery.blobs):
             print(f'Blob service found: {prx}')
-            self.blobs[identity] = prx
+            Discovery.blobs[identity] = prx
 
-    def selectAuthenticator():
+    def selectAuthenticator(self):
         """Select a random Authenticator Service"""
-        if not self.authenticators:
+        if not Discovery.authenticators:
             return None  # Return none so DirectoryService can throw the exception
         else:
-            return authenticators[random.choice(list(authenticators.keys()))]
+            return Discovery.authenticators[random.choice(list(Discovery.authenticators.keys()))]
 
-    def selectBlob():
+    def selectBlob(self):
         """Select a random Blob Service"""
-        if not self.blobs:
+        if not Discovery.blobs:
             return None  # Return none so Directory can throw the exception
         else:
-            return blobs[random.choice(list(blobs.keys()))]
+            return Discovery.blobs[random.choice(list(Discovery.blobs.keys()))]

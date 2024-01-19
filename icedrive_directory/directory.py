@@ -24,6 +24,7 @@ class Directory(IceDrive.Directory):
         self.childs = {}
         self.files = {}
         self.dataDir = "./USRDIRS/"
+        self.discovery = Discovery()  # Create the discovery object
 
     def getParent(self, current: Ice.Current = None) -> IceDrive.DirectoryPrx:
         """Return the proxy to the parent directory, if it exists. None in other case."""
@@ -104,13 +105,11 @@ class Directory(IceDrive.Directory):
     def linkFile(self, filename: str, blob_id: str, current: Ice.Current = None) -> None:
         """Link a file to a given blob_id."""
         if self.userObj.isAlive():
-            # Get a blob service
-            #TODO: BlobServicePrx = discovery.selectBlob() <- TEMPLATE
-            if False:  #TODO: CHECK A VALID BLOBSERVICE WAS RECIEVED
+            BlobServicePrx = self.discovery.selectBlob()  # Get a blob service
+            if BlobServicePrx == None:
                 raise IceDrive.TemporaryUnavailable('Blob Service')
             else:
-                #TODO: BlobServicePrx.upload()
-                #TODO: BlobServicePrx.link()
+                BlobServicePrx.link(blob_id)
                 if filename not in self.files:  # Check if the file exists
                     print(f'Request to link file {filename} to {self.name}')
                     self.files[filename] = blob_id  # Create and add the file
@@ -123,12 +122,11 @@ class Directory(IceDrive.Directory):
     def unlinkFile(self, filename: str, current: Ice.Current = None) -> None:
         """Unlink (remove) a filename from the current directory."""
         if self.userObj.isAlive():
-            # Get a blob service
-            #TODO: BlobServicePrx = discovery.selectBlob() <- TEMPLATE
-            if False: #TODO: CHECK A VALID BLOBSERVICE WAS RECIEVED
+            BlobServicePrx = self.discovery.selectBlob()  # Get a blob service
+            if BlobServicePrx == None:
                 raise IceDrive.TemporaryUnavailable('Blob Service')
             else:
-                #TODO: BlobServicePrx.unlink() <- TEMPLATE
+                BlobServicePrx.unlink(self.getBlobId(filename))
                 if filename in self.files:  # Check if it exists
                     print(f'Request to unlink file {filename} from {self.name}')
                     del self.files[filename]  # Delete the file
@@ -182,9 +180,8 @@ class Directory(IceDrive.Directory):
 
     def loadChildFromJson(self, child_data, parent=None):
         """Recursively load a child directory from JSON data (USED FOR EVERY OTHER DIR)"""
-        child = Directory(name=child_data['name'], user=child_data['user'], parent=parent)  # Create user 
-        child.UserObj = parent.UserObj  # Get the user object from the parent 
-        child.user = user
+        child = Directory(name=child_data['name'], user=parent.userObj, parent=parent)  # Create user 
+        child.user = child_data['user']
         child.files = child_data['files']
         child.childs = {name: child.loadChildFromJson(data, parent=child) for
                         name, data in child_data['childs'].items()}
@@ -212,11 +209,16 @@ class DirectoryService(IceDrive.DirectoryService):
         json_path = os.path.join(self.dataDir, f"{self.genUUID(self.user)}.json")
         print(f'Request to get root of {user}')
         
-        #AuthServicePrx = discovery.selectAuthenticator() <- TEMPLATE TO GET AUTHENTICATOR
-        if False:  #TODO: REPLACE WITH A CHECK IF A VALID AUTH SERVICE IS RECIEVED
+        discovery = Discovery()  # Create the discovery object
+        AuthServicePrx = discovery.selectAuthenticator()  # Get an authenticator
+
+        #TODO: Wait a max of 5 seconds and if no response is given, try a different one and remove
+        #previous one
+
+        if AuthServicePrx == None:  # Check if it is a valid prx
             raise IceDrive.TemporaryUnavailable('Authentication Service')
         else: 
-            if True: #TODO: AuthServicePrx.verifyUser(user) CHECK THE USER IS VALID
+            if AuthServicePrx.verifyUser: # Check if it is valid
                 if user.isAlive(): # Check the user is alive
                     if os.path.exists(json_path):  # Root already exists
                         root = Directory(name="root", user=user)

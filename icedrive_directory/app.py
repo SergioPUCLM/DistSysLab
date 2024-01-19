@@ -31,9 +31,9 @@ class DirectoryApp(Ice.Application):
         
         properties = self.communicator().getProperties()
         tp_name = properties.getProperty('DiscoveryTopic')  # Get topic name from config
-        try:  # Create the topic
+        try:  # Get the topic
             discovery_tp = tp_manager.retrieve(tp_name)
-        except IceStorm.NoSuchTopic:
+        except IceStorm.NoSuchTopic:  # Create the topic if it doesn't exist
             discovery_tp = tp_manager.create(tp_name)
 
         discovery_publisher = discovery_tp.getPublisher()  # Obtain the publisher for the topic
