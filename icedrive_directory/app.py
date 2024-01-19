@@ -28,26 +28,27 @@ class DirectoryApp(Ice.Application):
         # Discovery
         tp_manager = self.communicator().propertyToProxy('IceStorm.TopicManager.Proxy')
         tp_manager = IceStorm.TopicManagerPrx.checkedCast(tp_manager)
-
+        
         properties = self.communicator().getProperties()
-        try:  # Attempt to obtain the discovery topic from the manager
-            discovery_tp = tp_manager.retrieve(properties.getProperty('DiscoveryTopic'))
-        except IceStorm.NoSuchTopic:  # If not, create it
-            discovery_tp = tp_manager.create('discovery')
+        tp_name = properties.getProperty('DiscoveryTopic')  # Get topic name from config
+        try:  # Create the topic
+            discovery_tp = tp_manager.retrieve(tp_name)
+        except IceStorm.NoSuchTopic:
+            discovery_tp = tp_manager.create(tp_name)
 
         discovery_publisher = discovery_tp.getPublisher()  # Obtain the publisher for the topic
         discovery = IceDrive.DiscoveryPrx.uncheckedCast(discovery_publisher)  # Create a proxy for the discovery service
 
         qos = {}
         listener = Discovery()
-        listener_proxy = adapter.addWithUUID(listener)
-        subscriber = IceStorm.TopicPrx.uncheckedCast(listener_proxy)
+        listenerprx = adapter.addWithUUID(listener)
+        subscriber = IceStorm.TopicPrx.uncheckedCast(listenerprx)
         discovery_tp.subscribeAndGetPublisher(qos, subscriber)
 
         directory = IceDrive.DirectoryServicePrx.uncheckedCast(servant_proxy)
         while True:  # Repeat infinitely
             discovery.announceDirectoryService(prx=directory)  # Announce ourselves
-            time.sleep(5)  # Wait 5 seconds
+            time.sleep(5)  # Wait 5 seconds before repeating again
         
         self.shutdownOnInterrupt()
         self.communicator().waitForShutdown()

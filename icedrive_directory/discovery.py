@@ -7,43 +7,43 @@ import IceDrive
 
 class Discovery(IceDrive.Discovery):
     """Servants class for service discovery."""
-
     def __init__(self):
-        self.discAuthenticators = {}  # Discovered authenticator services
-        self.discDirectoryServices = {}  # Discovered directory services
-        self.discBlobServices = {}  # Discovered blob services
+        """Keep a list of discovered services"""
+        self.authenticators = {}  # Discovered authentication services
+        self.directories = {}  # Discovered directory services
+        self.blobs = {}  # Discovered blob services
 
     def announceAuthentication(self, prx: IceDrive.AuthenticationPrx, current: Ice.Current = None) -> None:
-        """Receive an Authentication service announcement."""
-        self.discAuthenticators[prx.ice_getIdentity()] = prx
-        print(f'Found Authenticator at {prx}')
-        with open('authenticators.txt', 'a') as file:  # Save to a file
-            file.write(f'Found Authenticator at {prx.ice_getIdentity()}\n')
+        """Receive an Authentication service announcement.""" 
+        identity = prx.ice_getIdentity()
+        if not(identity in self.authenticators):
+            print(f'Authenticator service found: {prx}')
+            self.authenticators[identity] = prx
 
     def announceDirectoryService(self, prx: IceDrive.DirectoryServicePrx, current: Ice.Current = None) -> None:
         """Receive an Directory service announcement."""
-        self.discDirectoryServices[prx.ice_getIdentity()] = prx
-        print(f'Found DirectoryService at {prx}')
-        with open('directories.txt', 'a') as file:  # Save to a file
-            file.write(f'Found Authenticator at {prx.ice_getIdentity()}\n')
+        identity = prx.ice_getIdentity()
+        if not(identity in self.directories):
+            print(f'Directory service found: {prx}')
+            self.directories[identity] = prx       
 
     def announceBlobService(self, prx: IceDrive.BlobServicePrx, current: Ice.Current = None) -> None:
         """Receive an Blob service announcement."""
-        self.discBlobServices[prx.ice_getIdentity()] = prx
-        print(f'Found BlobService at {prx}')
-        with open('blobs.txt', 'a') as file:  # Save to a file
-            file.write(f'Found Authenticator at {prx.ice_getIdentity()}\n')
+        identity = prx.ice_getIdentity()
+        if not(identity in self.blobs):
+            print(f'Blob service found: {prx}')
+            self.blobs[identity] = prx
 
-    def selectAuthenticator(self):
-        if len(self.discAuthenticators) == 0:
-            return None
+    def selectAuthenticator():
+        """Select a random Authenticator Service"""
+        if not self.authenticators:
+            return None  # Return none so DirectoryService can throw the exception
         else:
-            chosen = random.choice(list(self.discAuthenticators.keys()))
-            return self.discAuthenticators[chosen]
+            return authenticators[random.choice(list(authenticators.keys()))]
 
-    def selectBlob(self):
-        if len(self.discAuthenticators) == 0:
-            return None
+    def selectBlob():
+        """Select a random Blob Service"""
+        if not self.blobs:
+            return None  # Return none so Directory can throw the exception
         else:
-            chosen = random.choice(list(self.discBlobServices.keys()))
-            return self.discBlobServices[chosen]
+            return blobs[random.choice(list(blobs.keys()))]
