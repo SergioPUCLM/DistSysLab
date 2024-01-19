@@ -4,11 +4,13 @@ from typing import List
 import os
 import json
 import uuid as UD
+
 import Ice
 import IceDrive
-from .discovery import Discovery
-from .delayed_response import DirectoryQueryResponse
-from .delayed_response import DirectoryQuery
+
+from icedrive_directory.discovery import Discovery
+from icedrive_directory.delayed_response import DirectoryQueryResponse
+from icedrive_directory.delayed_response import DirectoryQuery
 
 
 class Directory(IceDrive.Directory):
@@ -88,22 +90,40 @@ class Directory(IceDrive.Directory):
     def linkFile(self, filename: str, blob_id: str, current: Ice.Current = None) -> None:
         """Link a file to a given blob_id."""
         if self.userObj.isAlive():
-            if filename not in self.files:  # Check if the file exists
-                print(f'Request to link file {filename} to {self.name}')
-                self.files[filename] = blob_id  # Create and add the file
-                self.saveToJson()
+            # GET THE BLOB
+            BlobServicePrx = discovery.selectBlob()  # Get a blob (NOT IMPLEMENTED FULLY)
+            if BlobServicePrx == None:
+                raise IceDrive.TemporaryUnavailable('Blob Service')
             else:
-                raise IceDrive.FileAlreadyExists(filename)
+                
+                # BLOB.upload()
+                # BLOB.link()
+
+                if filename not in self.files:  # Check if the file exists
+                    print(f'Request to link file {filename} to {self.name}')
+                    self.files[filename] = blob_id  # Create and add the file
+                    self.saveToJson()
+                else:
+                    raise IceDrive.FileAlreadyExists(filename)
 
     def unlinkFile(self, filename: str, current: Ice.Current = None) -> None:
         """Unlink (remove) a filename from the current directory."""
         if self.userObj.isAlive():
-            if filename in self.files:  # Check if it exists
-                print(f'Request to unlink file {filename} from {self.name}')
-                del self.files[filename]  # Delete the file
-                self.saveToJson()
+            # GET THE BLOB
+            BlobServicePrx = discovery.selectBlob()  # Get a blob (NOT IMPLEMENTED FULLY)
+            if BlobServicePrx == None:
+                raise IceDrive.TemporaryUnavailable('Blob Service')
             else:
-                raise IceDrive.FileNotFound(filename)
+                
+                # BLOB.upload()
+                # BLOB.unlink()
+
+                if filename in self.files:  # Check if it exists
+                    print(f'Request to unlink file {filename} from {self.name}')
+                    del self.files[filename]  # Delete the file
+                    self.saveToJson()
+                else:
+                    raise IceDrive.FileNotFound(filename)
    
     def getPath(self, current: Ice.Current = None) -> str:
         """Get the path from root to the current dir"""
@@ -172,18 +192,26 @@ class DirectoryService(IceDrive.DirectoryService):
         """Return the proxy for the root directory of the given user."""
         # user = UserPrx
         # self.user = Username
+
         self.user = user.getUsername()
         json_path = os.path.join(self.dataDir, f"{self.genUUID(self.user)}.json")
         print(f'Request to get root of {user}')
-        if user.isAlive():
-            if os.path.exists(json_path):  # Root already exists
-                root = Directory(name="root", user=user)
-                root.loadFromJson(json_path)
-            else:  # Root does not exist
-                root = Directory(name="root", user=user)
-                root.saveToJson()
-            proxy = current.adapter.addWithUUID(root)
-            return IceDrive.DirectoryPrx.uncheckedCast(proxy)
+        if user.isAlive(): # Check the user is alive
+            AuthServicePrx = discovery.selectAuthenticator()
+            if AuthServicePrx == None:  
+                raise IceDrive.TemporaryUnavailable('Authentication Service')
+            else: 
+                if (AuthServicePrx.verifyUser(user)): # Check the user is valid
+                    if os.path.exists(json_path):  # Root already exists
+                        root = Directory(name="root", user=user)
+                        root.loadFromJson(json_path)
+                    else:  # Root does not exist
+                        root = Directory(name="root", user=user)
+                        root.saveToJson()
+                    proxy = current.adapter.addWithUUID(root)
+                    return IceDrive.DirectoryPrx.uncheckedCast(proxy)
+                else:  # The user is not valid
+                    pass
 
     def genUUID(self, user):
         """Generate or resolve a unique user UUID"""

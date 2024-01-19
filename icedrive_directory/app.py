@@ -7,9 +7,10 @@ from typing import List
 
 import Ice
 import IceDrive
+import IceStorm
 
-from .directory import DirectoryService
-from .discovery import Discovery
+from icedrive_directory.directory import DirectoryService
+from icedrive_directory.discovery import Discovery
 
 
 class DirectoryApp(Ice.Application):
@@ -18,32 +19,36 @@ class DirectoryApp(Ice.Application):
     def run(self, args: List[str]) -> int:
         """Execute the code for the Directory class."""
         # Directory
-        adapter = self.communicator().createObjectAdapter("DirectoryAdapter")
-        adapter.activate()
-        servant = DirectoryService()
-        servant_proxy = adapter.addWithUUID(servant)
+        adapter = self.communicator().createObjectAdapter("DirectoryAdapter")  # Obj adapter
+        adapter.activate()  # Activate adapter
+        servant = DirectoryService()  # Create DirectoryService
+        servant_proxy = adapter.addWithUUID(servant)  # Proxy for directory servant (add to adapter)
         logging.info("Proxy: %s", servant_proxy)
 
         # Discovery
-        ip_vm = '10.200.1.147'
-        directory = IceDrive.DirectoryPrx.uncheckedCast(servant_proxy)
 
-        #FIX: TEMPORAL BAND-AID UNTIL I CAN FIGURE OUT HOW TO USE THE MF CONFIG FILE
-        tp_manager = self.communicator().stringToProxy(f'IceStorm/TopicManager:tcp -h {ip_vm} -p 10000') 
-        tp_manager = IceStorm.TopicManagerPrx.checkedCast(topic_mgr)
+        # Create topic manager
+        tp_manager = self.communicator().propertyToProxy('IceStorm.TopicManager.Proxy')
+        tp_manager = IceStorm.TopicManagerPrx.checkedCast(tp_manager)
 
-        try:  # Attempt to obtain the topic
+        try:  # Attempt to obtain the discovery topic from the manager
             discovery_tp = tp_manager.retrieve("discovery")
         except IceStorm.NoSuchTopic:  # If not, create it
             discovery_tp = tp_manager.create("discovery")
 
         discovery_publisher = discovery_tp.getPublisher()  # Obtain the publisher for the topic
         discovery = IceDrive.DiscoveryPrx.uncheckedCast(discovery_publisher)  # Create a proxy for the discovery service
-        
-        logging.info("Proxy: %s", servant_proxy)
 
-        while True:
-            discovery.announceDirectoryService(directory)  # Announce ourselves
+        directory = IceDrive.DirectoryServicePrx.uncheckedCast(servant_proxy)
+
+        qos = {}
+        service_listener = Discovery()
+        service_listener_prx = adapter.addWithUUID(service_listener)
+        dicovery_subscriber = IceStorm.TopicPrx.uncheckedCast(service_listener_prx)
+        discovery_tp.subscribeAndGetPublisher(qos, dicovery_subscriber)
+
+        while True:  # Repeat infinitely
+            discovery.announceDirectoryService(prx=directory)  # Announce ourselves
             time.sleep(5)  # Wait 5 seconds
         
         self.shutdownOnInterrupt()

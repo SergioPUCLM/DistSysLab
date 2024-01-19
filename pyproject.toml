@@ -32,4 +32,3 @@ linters = ["black", "ruff", "pydocstyle"]
 
 [project.scripts]
 icedrive-directory = "icedrive_directory.command_line_handlers:server"
-icedrive-client = "icedrive_directory.command_line_handlers:client"
