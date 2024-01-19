@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "icedrive-directory"
-version = "0.0.1"
+version = "0.2.0"
 authors = [
   { name="Sergio Pozuelo Martín-Consuegra", email="sergio.pozuelo4@alu.uclm.es" },
 ]
@@ -32,4 +32,3 @@ linters = ["black", "ruff", "pydocstyle"]
 
 [project.scripts]
 icedrive-directory = "icedrive_directory.command_line_handlers:server"
-icedrive-client = "icedrive_directory.command_line_handlers:client"
